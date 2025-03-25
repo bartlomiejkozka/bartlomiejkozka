@@ -17,7 +17,7 @@ Chess Engine (based on the Minimax algorithm) —> more updates coming soon
 
 ## Private projects
 
-  - [Tiny-Compiler](https://github.com/bartlomiejkozka/teeny-tiny-compiler "Visit the repository") - tiny compiler of simple pseudo-code
+  - [Tiny-Compiler](https://github.com/bartlomiejkozka/teeny-tiny-compiler "Visit the repository") - pseudo-code compiler
   - [Chess-Game](https://github.com/bartlomiejkozka/chess_game "Visit the repository") - chess game
   - [Snake-Game](https://github.com/bartlomiejkozka/snake_game "Visit the repository") - snake game written with strong OOP
   - [Tetris-Game](https://github.com/bartlomiejkozka/tetris_game "Visit the repository") - tetris game
@@ -39,7 +39,7 @@ Some of the events I took part in:
 ## Experience summary
 
 <p align="center">
-  <img src="https://github-readme-stats-eosin-one-98.vercel.app/api/top-langs/?username=bartlomiejkozka&theme=dark&layout=compact&hide_border=false&count_private=true&hide_title=true" />
+  <img src="https://github-readme-stats-eosin-one-98.vercel.app/api/top-langs/?username=bartlomiejkozka&theme=radical&layout=compact&hide_border=false&count_private=true&hide_title=true" />
 </p>
 
 ## Languages and tools
