@@ -1,4 +1,4 @@
-# 💫 About Me:
+# About Me:
 I'm a third-year Data Engineering student at AGH University of Science and Technology, passionate about continuous improvement and eager to learn new technologies.
 
 
