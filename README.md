@@ -27,18 +27,15 @@ Chess Engine (based on the Minimax algorithm) —> more updates coming soon
 
 Some of the events I took part in:  
 
-- **HackYeah 2024**
+- **HackYeah 2024**\
 [Sleep-Diary](https://github.com/bartlomiejkozka/sleep_diary "Visit the repository") - wellness app
 
 
 ## University projects
 
-- [Introduction to Machine Learning](https://github.com/bartlomiejkozka/ML/tree/main/gift-ideas-generator) - gitf ideas generator using Gemini LLM.
+- Check out my repository list!
 
-- And more in repository list!
-
-
-                                                                                                                                                                                                                                    
+      
 ## Experience summary
 
 <p align="center">
