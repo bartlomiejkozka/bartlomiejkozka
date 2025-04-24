@@ -17,12 +17,15 @@ Chess Engine (based on the Minimax algorithm) —> more updates coming soon
 
 ## Private projects
 
-  - [Tiny-Compiler](https://github.com/bartlomiejkozka/teeny-tiny-compiler "Visit the repository") - pseudo-code compiler
-  - [Chess-Game](https://github.com/bartlomiejkozka/chess_game "Visit the repository") - chess game
-  - [Snake-Game](https://github.com/bartlomiejkozka/snake_game "Visit the repository") - snake game written with strong OOP
-  - [Tetris-Game](https://github.com/bartlomiejkozka/tetris_game "Visit the repository") - tetris game
+  - [Barkoz Tempo](https://github.com/bartlomiejkozka/Barkoz-Tempo "Visit the repository") - chess engine
+  - [Tiny Compiler](https://github.com/bartlomiejkozka/teeny-tiny-compiler "Visit the repository") - pseudo-code compiler
 
----
+mini-games:
+  - [Chess](https://github.com/bartlomiejkozka/chess_game "Visit the repository") - chess game
+  - [Snake](https://github.com/bartlomiejkozka/snake_game "Visit the repository") - snake game written with strong OOP
+  - [Tetris](https://github.com/bartlomiejkozka/tetris_game "Visit the repository") - tetris game
+
+
 ## Hackathon Projects  
 
 Some of the events I took part in:  
