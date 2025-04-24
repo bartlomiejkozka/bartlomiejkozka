@@ -31,7 +31,7 @@ mini-games:
 Some of the events I took part in:  
 
 - **HackYeah 2024**\
-[Sleep-Diary](https://github.com/bartlomiejkozka/sleep_diary "Visit the repository") - wellness app
+[Sleep Diary](https://github.com/bartlomiejkozka/sleep_diary "Visit the repository") - wellness app
 
 
 ## University projects
@@ -47,4 +47,4 @@ Some of the events I took part in:
 
 ## Languages and tools
 
-[![My Skills](https://skillicons.dev/icons?i=linux,bash,c,cpp,cs,java,cmake,py,fastapi,git,github,html,css,js,php,flutter,dart,bitbucket,r&theme=dark&perline=10)](https://skillicons.dev)
+[![My Skills](https://skillicons.dev/icons?i=linux,bash,c,cpp,cs,java,cmake,py,fastapi,git,github,html,css,js,php,flutter,dart,bitbucket,r&theme=dark&perline=10,docker)](https://skillicons.dev)
