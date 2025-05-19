@@ -12,10 +12,8 @@ I am constantly eager to expand my knowledge in these areas:
 
 ## Engineering Thesis
 
-Chess Engine (based on the Minimax algorithm) —> see below <br>
-                                                    ||<br>
-                                                    ||<br>
-                                                     \/
+Chess Engine (based on the Minimax algorithm) —> see below
+
 
 ## Private projects
 
