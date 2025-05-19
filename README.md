@@ -15,7 +15,7 @@ I am constantly eager to expand my knowledge in these areas:
 Chess Engine (based on the Minimax algorithm) —> see below <br>
                                                     ||<br>
                                                     ||<br>
-                                                    \/
+                                                     \/
 
 ## Private projects
 
