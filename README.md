@@ -19,6 +19,7 @@ Chess Engine (based on the Minimax algorithm) —> more updates coming soon
 
   - [Barkoz Tempo](https://github.com/bartlomiejkozka/Barkoz-Tempo "Visit the repository") - chess engine
   - [Tiny Compiler](https://github.com/bartlomiejkozka/teeny-tiny-compiler "Visit the repository") - pseudo-code compiler
+  - [Gear Shift decision maker](https://github.com/bartlomiejkozka/Gear-shift-FuzzyLogic "Visit the repository") - Gear shift decision maker based on AI Fuzzy Logic algorithm
 
 mini-games:
   - [Chess](https://github.com/bartlomiejkozka/chess_game "Visit the repository") - chess game
@@ -42,7 +43,7 @@ Some of the events I took part in:
 ## Experience summary
 
 <p align="center">
-  <img src="https://github-readme-stats-eosin-one-98.vercel.app/api/top-langs/?username=bartlomiejkozka&theme=radical&layout=compact&hide_border=false&count_private=true&hide_title=true&hide=html,jupyter%20notebook" />
+  <img src="https://github-readme-stats-eosin-one-98.vercel.app/api/top-langs/?username=bartlomiejkozka&theme=radical&layout=compact&hide_border=false&count_private=true&hide_title=true&hide=html,jupyter%20notebook"/>
 </p>
 
 ## Languages and tools
