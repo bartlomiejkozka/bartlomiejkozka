@@ -4,8 +4,8 @@
 
 I am constantly eager to expand my knowledge in these areas:
 
-- Low Level Programming
 - Artificial Intelligence
+- Low Level Programming
 - Data Science
 
 
