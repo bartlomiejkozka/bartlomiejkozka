@@ -7,7 +7,6 @@ I am constantly eager to expand my knowledge in these areas:
 - Low Level Programming
 - Artificial Intelligence
 - Data Science
-- Microcontrollers
 
 
 ## Engineering Thesis
