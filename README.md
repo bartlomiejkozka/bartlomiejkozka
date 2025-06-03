@@ -43,7 +43,7 @@ Some of the events I took part in:
 ## Experience summary
 
 <p align="center">
-  <img src="https://github-readme-stats-eosin-one-98.vercel.app/api/top-langs/?username=bartlomiejkozka&theme=radical&layout=compact&hide_border=false&count_private=true&hide_title=true&hide=html,jupyter%20notebook"/>
+  <img src="https://github-readme-stats-eosin-one-98.vercel.app/api/top-langs/?username=bartlomiejkozka&theme=radical&layout=compact&hide_border=false&count_private=true&hide_title=true&hide=html,jupyter%20notebook,Blade"/>
 </p>
 
 ## Languages and tools
