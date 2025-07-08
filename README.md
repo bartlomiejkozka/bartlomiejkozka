@@ -36,6 +36,7 @@ Some of the events I took part in:
 ## University projects
 
 - [Hotel Events Management System](https://github.com/bartlomiejkozka/Sys-mgmt-hotel-events "Visit the repository")
+- [Short-AI-algs](https://github.com/bartlomiejkozka/short-AI-algs "Visit the repository")
 - Check out my repository list!
 
       
