@@ -1,11 +1,11 @@
-\documentclass{article}
+\documentclass[9pt]{extarticle}
 
 \usepackage[utf8]{inputenc}  % UTF-8 support
 \usepackage[T1]{fontenc}     % Better font encoding for Computer Modern
 \usepackage{lipsum}          % For sample text (you can remove this)
 \usepackage[
     top=    2cm,   
-    bottom= 2cm, 
+    bottom= 1cm, 
     left=   2cm,    
     right=  2cm, 
 ]{geometry}
@@ -18,7 +18,8 @@
 
 % personal information
 \begin{center}
-\large{\textbf{Bartłomiej Kózka}} \\
+{\LARGE{\textbf{Bartłomiej Kózka}}} \\
+\vspace{0.2cm}
 Krakow, Poland - bartlomiej.kozka.bis@gmail.com - +48 607 551 824 - 
     \href{https://www.linkedin.com/in/bart%C5%82omiejkozka44/}{linkedin link} -
     \href{https://github.com/bartlomiejkozka}{github link}
@@ -37,7 +38,7 @@ Krakow, Poland - bartlomiej.kozka.bis@gmail.com - +48 607 551 824 -
     \item Actively contributed to the full Scrum development cycle. 
           \textbf{Implemented} inter-process communication using Protocol Buffers.
           \textbf{Designed and Implemented} continuous integration (CI) pipelines.
-    \item Technologies: C/C++, Python, UNIX, unit testing (CUnit), functional testing (pytest), docker, jenkins, sonarqube, low-level design
+    \item Technologies: C/C++, Python, UNIX, unit testing (CUnit), functional testing (pytest), docker, jenkins, low-level design
 \end{itemize}
 
 % ------------------------------------------------------------------------------
@@ -47,7 +48,10 @@ Krakow, Poland - bartlomiej.kozka.bis@gmail.com - +48 607 551 824 -
 \rule{\textwidth}{0.1pt}
 \vspace{-0.5em}
 
-\noindent\textbf{The AGH University of Krakow}
+\noindent
+\makebox[\textwidth]{%
+\textbf{The AGH University of Krakow} \hfill October 2022 - Present \\
+}
 B.Sc. \textbf{Data Science}, 3-year GPA \textbf{4.75 / 5.0}
 
 % ------------------------------------------------------------------------------
@@ -74,8 +78,7 @@ B.Sc. \textbf{Data Science}, 3-year GPA \textbf{4.75 / 5.0}
 \textit{Link}
 \href{https://github.com/bartlomiejkozka/Gear-shift-FuzzyLogic}{https://github.com/bartlomiejkozka/Gear-shift-FuzzyLogic}
 \begin{itemize}[itemsep=-3pt, topsep=3pt]
-    \item Designed and implemented an AI-based fuzzy logic system in \textbf{C++} to simulate automatic gear shifting in vehicles based on real-time inputs such as velocity, RPM, and throttle level.
-    \item Built a rule-based decision-making engine with fuzzy defuzzification techniques to model realistic driving behavior and visualize gear transitions under various driving conditions.
+    \item Designed and implemented an AI-based fuzzy logic system in C++ to simulate automatic gear shifting in vehicles based on real-time inputs such as velocity, RPM, and throttle level, building a rule-based decision-making engine with defuzzification techniques to model realistic driving behavior and visualize gear transitions under various conditions.
 \end{itemize}
 
 \noindent
@@ -87,29 +90,31 @@ B.Sc. \textbf{Data Science}, 3-year GPA \textbf{4.75 / 5.0}
 \begin{itemize}[itemsep=-3pt, topsep=3pt]
     \item Developed a lightweight pseudo-code compiler application using \textbf{Python} and \textbf{FastAPI}
           framework, structured as a REST API with integrated database functionality.
-    \item Enables users to learn coding by writing, compiling, and executing pseudo-code, with the
+          Enables users to learn coding by writing, compiling, and executing pseudo-code, with the
           ability to save and manage scripts within their personal accounts
 \end{itemize}
 
+%---------------------------------------------
+\vspace{0.2cm}
+\noindent\textbf{\underline{Data Science}}
+\vspace{0.1cm}
+
 \noindent
-\makebox[\textwidth]{%
-\textbf{Analysis of Bicycle Traffic on the Fremont Bridge in Seattle} \hfill 2025 \\
-}
-\textit{Link}
-\href{https://github.com/bartlomiejkozka/teeny-tiny-compiler}{https://github.com/bartlomiejkozka/teeny-tiny-compiler}
-\begin{itemize}[itemsep=-3pt, topsep=3pt]
-    \item here
+\makebox[\textwidth]{\textbf{Analysis of Bicycle Traffic on the Fremont Bridge in Seattle} \hfill 2025 \\} 
+    \textit{Link} \href{https://github.com/bartlomiejkozka/teeny-tiny-compiler}{https://github.com/bartlomiejkozka/teeny-tiny-compiler} 
+    \begin{itemize}[itemsep=-3pt, topsep=3pt]
+    \item Analyzed bicycle traffic data from Seattle’s Fremont Bridge using \textbf{Python (pandas, matplotlib, seaborn)} \\
+        to identify temporal patterns and effectively communicate insights through visualizations.
 \end{itemize}
 
 \noindent
-\makebox[\textwidth]{%
-\textbf{Brenna Meteorological Data - EDA} \hfill 2025 \\
-}
-\textit{Link}
-\href{https://github.com/bartlomiejkozka/ML/tree/main/cw6}{https://github.com/bartlomiejkozka/ML/tree/main/cw6}
+\makebox[\textwidth]{\textbf{Brenna Meteorological Data - EDA} \hfill 2025 \\}
+    \textit{Link} \href{https://github.com/bartlomiejkozka/ML/tree/main/cw6}{https://github.com/bartlomiejkozka/ML/tree/main/cw6}
 \begin{itemize}[itemsep=-3pt, topsep=3pt]
-    \item here
+    \item Performed exploratory data analysis on 2020 weather data from Brenna using pandas, matplotlib, seaborn \\
+        to uncover seasonal patterns, correlations, and anomalies in temperature, humidity, and precipitation.
 \end{itemize}
+%---------------------------------------------
 
 % ------------------------------------------------------------------------------
 
@@ -120,10 +125,10 @@ B.Sc. \textbf{Data Science}, 3-year GPA \textbf{4.75 / 5.0}
 
 \noindent
 \makebox[\textwidth]{%
-\textbf{\underline{HackYeah Krakow}} \hfill 2025
+\textbf{\underline{HackYeah Krakow}} \hfill 2024 \\
 }
 \begin{itemize}[itemsep=-3pt, topsep=3pt]
-    \item Co-developed a wellness application - Sleep Diary, focused on analyzing and tracking sleep patterns to improve sleep quality.
+    \item Co-developed a wellness application - Sleep Diary, focused on analyzing sleep patterns to improve sleep quality.
 \end{itemize}
 
 % ------------------------------------------------------------------------------
