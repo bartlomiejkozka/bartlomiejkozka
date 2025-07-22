@@ -19,6 +19,10 @@ Chess Engine (based on the Minimax algorithm) -—> in progress (see below)
   - [Tiny Compiler](https://github.com/bartlomiejkozka/teeny-tiny-compiler "Visit the repository") - pseudo-code compiler
   - [Gear Shift decision maker](https://github.com/bartlomiejkozka/Gear-shift-FuzzyLogic "Visit the repository") - Gear shift decision maker based on AI Fuzzy Logic algorithm
 
+Data Science:
+  - [Fremont-bike-analysis](https://github.com/bartlomiejkozka/Fremont-bike-analysis "Visit the repository") - Analysis of Bicycle Traffic on the Fremont Bridge in Seattle
+  - [Brenna-meteorology-2020](https://github.com/bartlomiejkozka/Brenna-meteorology-2020 "Visit the repository") - Exploratory data analysis on 2020 weather data from Brenna
+
 mini-games:
   - [Chess](https://github.com/bartlomiejkozka/chess_game "Visit the repository") - chess game
   - [Snake](https://github.com/bartlomiejkozka/snake_game "Visit the repository") - snake game written with strong OOP
