@@ -1,0 +1,286 @@
+% This example uses the 'minted' package, so you need to run the compiler with 
+% the '-shell-escape' option, i.e.
+% 	pdflatex -shell-escape example.tex
+% Additionally, you must have the 'pygmentize' program installed, which is part of 
+% the 'Pygments' package (https://pygments.org/)
+
+\documentclass[aspectratio=1610, english]{beamer} 
+% Jeśli chcesz otrzymać prezentację w języku polskim, to, powyżej, zamień „english” na „polish”
+\usepackage{babel}
+\makeatletter
+\@ifclasswith{beamer}{polish}{
+	\usepackage{polski}
+}
+\makeatother
+\usepackage[utf8]{inputenc}
+\usepackage{listings} % We want to put listings
+\usepackage{minted}   % We want to put listings
+\usepackage{graphicx} % We want to put images
+
+\mode<beamer>{ 	% In the 'beamer' mode
+	\definecolor{links}{HTML}{2A1B81}
+	\hypersetup{
+		pdfpagemode=FullScreen,                 % Enable Full screen mode
+		colorlinks,
+		linkcolor=,
+		urlcolor=links
+	}
+	\usetheme[parttitle=rightfooter]{AGH}       % Show part title in right footer
+	%\usetheme[nosidebar]{AGH}                  % Do not show sidebar on non-title slides
+	%\usetheme[nosidebar, margins=1em]{AGH}     % Do not show sidebar on non-title slides and set both margins (left / right) to 1em
+	%\usetheme[dark]{AGH}                       % Use dark background
+	%\usetheme[dark, parttitle=leftfooter]{AGH} % Use dark background and show part title in left footer
+}
+\mode<handout>{	% In the 'handout' mode
+	\hypersetup{pdfpagemode=None}		
+	\usepackage{pgfpages}
+	\pgfpagesuselayout{4 on 1}[a4paper,border shrink=5mm,landscape]	% Show 4 slides on 1 page
+	\pgfpageslogicalpageoptions{1}{border code=\pgfusepath{stroke}}
+	\pgfpageslogicalpageoptions{2}{border code=\pgfusepath{stroke}}
+	\pgfpageslogicalpageoptions{3}{border code=\pgfusepath{stroke}}
+	\pgfpageslogicalpageoptions{4}{border code=\pgfusepath{stroke}}
+  	\usetheme{boxes}
+  	\addheadbox{structure}{\quad\insertpart\hfill\insertsection\hfill\insertsubsection\qquad}          % Content of header
+	\addfootbox{structure}{\quad\insertshortauthor\hfill\insertframenumber\hfill\insertsubtitle\qquad} % Content of footer
+	  }
+
+\AtBeginPart{ % At begin part: display its name
+	\frame{\partpage}
+}
+
+\author[Bartłomiej Kózka]
+{
+		Bartłomiej Kózka
+}
+\date{}
+
+\title[Silnik szachowy]
+{
+    Projekt silnika szachowego z wykorzystaniem metod sztucznej inteligencji
+}
+
+
+%%%%%%%%%%% Configuration of the listings package %%%%%%%%%%%%%%%%%%%%%%%%%%
+% Source: https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings#Using_the_listings_package
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{green},      % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=single,	                   % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{gray},   % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{cyan},        % string literal style
+  tabsize=2,	                   % sets default tabsize to 2 spaces
+  title=\lstname,                  % show the filename of files included with \lstinputlisting; also try caption instead of title
+                                   % needed if you want to use UTF-8 Polish chars
+  literate={ą}{{\k{a}}}1
+           {Ą}{{\k{A}}}1
+           {ę}{{\k{e}}}1
+           {Ę}{{\k{E}}}1
+           {ó}{{\'o}}1
+           {Ó}{{\'O}}1
+           {ś}{{\'s}}1
+           {Ś}{{\'S}}1
+           {ł}{{\l{}}}1
+           {Ł}{{\L{}}}1
+           {ż}{{\.z}}1
+           {Ż}{{\.Z}}1
+           {ź}{{\'z}}1
+           {Ź}{{\'Z}}1
+           {ć}{{\'c}}1
+           {Ć}{{\'C}}1
+           {ń}{{\'n}}1
+           {Ń}{{\'N}}1
+}
+%%%%%%%%%%% Configuration of the minted package %%%%%%%%%%%%%%%%%%%%%%%%%%
+\setminted[C++]{frame=single,linenos}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern} % opcjonalnie, ale poprawia wygląd czcionek
+
+%%%%%%%%%%%%%%%%%
+\begin{document}
+\maketitle
+
+\begin{frame}{Plan prezentacji}
+	\tableofcontents
+\end{frame}
+
+%%%%%%%%%%%%%%%%
+
+\section{Cel pracy}
+
+\begin{frame}{Cel pracy}
+    \begin{itemize}
+        \item \textbf{Głównym celem pracy} jest zaprojektowanie i implementacja silnika szachowego zdolnego do samodzielnej gry na poziomie w przedziale \textbf{1000–2000 ELO}, z wykorzystaniem klasycznych technik przeszukiwania drzewa gry (drzewa decyzyjnego).
+        \newline
+        \item \textbf{Celem dodatkowym} jest porównanie skuteczności różnych funkcji oceny oraz metod optymalizacji procesu wyszukiwania ruchów.
+    \end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%
+
+\section{Metodyka}
+%----------------
+\begin{frame}{Metodyka}
+    % - wspomioeinen o wytworzeniu wlansych "bibliotek" np. do bit operatoion funkcje, generowanie magics numbers
+    \begin{enumerate}
+    \item \textbf{Analiza teoretyczna i przegląd rozwiązań} (zapoznanie z istniejącymi silnikami)
+    
+    \item \textbf{Projekt architektury silnika} % wybór reprezentacji planszy, podział na moduły (plansza, generacja ruchów, wyszukiwanie, ocena).
+    
+    \item \textbf{Konfiguracja środowiska i pipeline CI/CD}
+
+    \item \textbf{Implementacja i optymalizacja algorytmu przeszukiwania}
+    
+    \item \textbf{Funkcja oceny pozycji} (opracowanie heurystyki oceny)
+        
+    \item \textbf{Weryfikacja i ocena działania} (testy poprawności, porównanie wyników z innymi silnikami)
+    
+    \item \textbf{Wnioski i dalsze kierunki rozwoju}
+    \end{enumerate}   
+
+\end{frame}
+
+%----------------
+
+\begin{frame}{Metodyka – Reprezentacja planszy}
+    % Wspomnienie o wykorzystaniu operacji bitowych dla zwiększenia szybkości działania,
+    % brak złożonej abstrakcji i polimorfizmu w czasie wykonania → low-level programming (C++).
+    Możliwe metody reprezentacji planszy:
+    \newline
+    \begin{itemize}
+        \item \textbf{Piece-centric (bitboards)} – metoda wybrana; plansza traktowana jako skończony zbiór 64 pól,
+        najczęściej reprezentowany przy użyciu 64-bitowych liczb całkowitych (każde pole odpowiada jednemu bitowi).
+        \newline 
+        \item Square-centric
+        \newline
+        \item Rozwiązania hybrydowe
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Metodyka – Reprezentacja planszy}
+    \includegraphics[scale=0.5]{bitBoard.png}
+\end{frame}
+
+%----------------
+
+\begin{frame}{Metodyka – Generacja ruchów}
+    % Implementacja inkrementalna / generacyjna.
+    % Sprawdzenie poprawności ruchów: legality / pseudo-legality check.
+    Możliwe metody generacji ruchów:
+    \newline
+    \begin{itemize}
+        \item \textbf{Iteracyjna (generatorowa)} – metoda wybrana; „leniwe” generowanie ruchów i ich bieżąca ocena.
+        \newline 
+        \item Generatywna
+    \end{itemize}
+\end{frame}
+
+%----------------
+
+\begin{frame}{Metodyka – Algorytm przeszukiwania (Search Algorithm)}
+    % Ocena z punktu widzenia gracza A = – ocena z punktu widzenia gracza B.
+    % Algorytm przeszukuje drzewo gry w głąb, stosując negację wyniku dla przeciwnika.
+    \textbf{NegaMax framework}
+    \newline
+    Rozszerzenia algorytmu:
+    \newline 
+    \begin{itemize}
+        \item \textbf{Alpha–beta pruning}
+        \newline 
+        \item \textbf{Iterative deepening}
+    \end{itemize}
+    \begin{center}
+        \includegraphics[scale=0.35]{tree.png}
+    \end{center}
+\end{frame}
+
+%----------------
+
+\begin{frame}[fragile]{Metodyka Funkcja oceny (Evaluation Function)}
+    Możliwe podejścia do oceny pozycji:
+    \newline
+    \begin{itemize}
+        \item \textbf{HCE (Hand-Crafted Evaluation)} – metoda wybrana;
+        \newline 
+        \item Wielowarstwowa sieć neuronowa – potencjalne rozszerzenie projektu, możliwe do realizacji w ramach pracy magisterskiej.
+    \end{itemize}
+
+    \begin{lstlisting}[
+  basicstyle=\ttfamily\scriptsize,
+  numbers=none,
+  aboveskip=2pt, belowskip=2pt,
+  columns=fullflexible,
+  xleftmargin=0pt, framexleftmargin=0pt, framesep=2pt
+]
+    f(p) = 200(K - K')
+         + 9(Q - Q')
+         + 5(R - R')
+         + 3(B - B' + N - N')
+         + 1(P - P')
+         - 0.5(D - D' + S - S' + I - I')
+         + 0.1(M - M') + ...
+
+    KQRBNP = liczba króli, hetmanów, wież, gońców, skoczków i pionków
+    D, S, I = zdwojone, zablokowane i izolowane pionki
+    M = mobilność (liczba legalnych ruchów)
+    \end{lstlisting}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%
+
+\section{Narzędzia}
+%----------------
+\begin{frame}{Narzędzia}
+    \begin{itemize}
+        \item język programowania: C++
+        \item kompilacja: GCC, CMake
+        \item środowisko: Visual Studio Code
+        \item kontrola wersji: Git 
+        \item CI/CD: GitHub Actions
+        \item testy jednostkowe: GoogleTest framework
+        \item testy funkcjonalne: stockfish (perft), python-chess framework
+        \noindent\rule{\textwidth}{0.5pt}
+        \item interfejs użytkownika: UCI (Universal Chess Interface) – możliwość integracji z lokalnymi lub internetowymi GUI (np. Arena, CuteChess, Lichess)
+    \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%
+
+\section{Źródła}
+%----------------
+\begin{frame}{Źródła}
+    \begin{itemize}
+        \item Dokumnetacja wymienionych narzędzi (m.in. https://cppreference.com)
+        \newline
+        \item Chess Programming Wiki – internetowa encyklopedia poświęcona programowaniu silników szachowych. (https://www.chessprogramming.org)
+    \end{itemize}
+\end{frame}
+%----------------
+\begin{frame}{}
+    \centering
+    \Huge Dziękuję za uwagę.
+    \vspace{1cm}
+\end{frame}
+
+
+\end{document}
