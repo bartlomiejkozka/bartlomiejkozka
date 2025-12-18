@@ -4,7 +4,7 @@
 % Additionally, you must have the 'pygmentize' program installed, which is part of 
 % the 'Pygments' package (https://pygments.org/)
 
-\documentclass[aspectratio=1610, english]{beamer} 
+\documentclass[aspectratio=1610, polish]{beamer} 
 % Jeśli chcesz otrzymać prezentację w języku polskim, to, powyżej, zamień „english” na „polish”
 \usepackage{babel}
 \makeatletter
@@ -16,6 +16,11 @@
 \usepackage{listings} % We want to put listings
 \usepackage{minted}   % We want to put listings
 \usepackage{graphicx} % We want to put images
+\usepackage{pifont}
+
+
+\renewcommand{\familydefault}{\rmdefault}
+
 
 \mode<beamer>{ 	% In the 'beamer' mode
 	\definecolor{links}{HTML}{2A1B81}
@@ -50,13 +55,14 @@
 
 \author[Bartłomiej Kózka]
 {
-		Bartłomiej Kózka
+		Bartłomiej Kózka \newline
+        Promotor: Skoczylas Norbert, prof. dr hab. inż.
 }
 \date{}
 
 \title[Silnik szachowy]
 {
-    Projekt silnika szachowego z wykorzystaniem metod sztucznej inteligencji
+    Projekt silnika szachowego z wykorzystaniem metod sztucznej inteligencji -  \textcolor{red}{2}
 }
 
 
@@ -111,9 +117,6 @@
 %%%%%%%%%%% Configuration of the minted package %%%%%%%%%%%%%%%%%%%%%%%%%%
 \setminted[C++]{frame=single,linenos}
 
-\usepackage[T1]{fontenc}
-\usepackage{lmodern} % opcjonalnie, ale poprawia wygląd czcionek
-
 %%%%%%%%%%%%%%%%%
 \begin{document}
 \maketitle
@@ -128,102 +131,95 @@
 
 \begin{frame}{Cel pracy}
     \begin{itemize}
-        \item \textbf{Głównym celem pracy} jest zaprojektowanie i implementacja silnika szachowego zdolnego do samodzielnej gry na poziomie w przedziale \textbf{1000–2000 ELO}, z wykorzystaniem klasycznych technik przeszukiwania drzewa gry (drzewa decyzyjnego).
+        \item \textbf{Głównym celem pracy} jest zaprojektowanie i implementacja silnika szachowego zdolnego do samodzielnej gry na poziomie \textbf{1000 ELO}, z wykorzystaniem klasycznych technik przeszukiwania drzewa gry (drzewa decyzyjnego).
         \newline
-        \item \textbf{Celem dodatkowym} jest porównanie skuteczności różnych funkcji oceny oraz metod optymalizacji procesu wyszukiwania ruchów.
+        \item \textbf{Celem dodatkowym} jest porównanie skuteczności różnych funkcji oceny oraz metod optymalizacji procesu wyszukiwania ruchów. \textcolor{red}{\ding{55}}  
+
     \end{itemize}
 \end{frame}
 
 
 %%%%%%%%%%%%%%%%
 
-\section{Metodyka}
+\section{Metodyka i Wyniki}
 %----------------
 \begin{frame}{Metodyka}
     % - wspomioeinen o wytworzeniu wlansych "bibliotek" np. do bit operatoion funkcje, generowanie magics numbers
     \begin{enumerate}
-    \item \textbf{Analiza teoretyczna i przegląd rozwiązań} (zapoznanie z istniejącymi silnikami)
+    \item \textbf{Analiza teoretyczna i przegląd rozwiązań} (zapoznanie z istniejącymi silnikami) \textcolor{green}{\ding{51}} 
     
-    \item \textbf{Projekt architektury silnika} % wybór reprezentacji planszy, podział na moduły (plansza, generacja ruchów, wyszukiwanie, ocena).
+    \item \textbf{Projekt architektury silnika} \textcolor{green}{\ding{51}} % wybór reprezentacji planszy, podział na moduły (plansza, generacja ruchów, wyszukiwanie, ocena).\textcolor{green}{\ding{51}} 
     
-    \item \textbf{Konfiguracja środowiska i pipeline CI/CD}
+    \item \textbf{Konfiguracja środowiska i pipeline CI/CD} \textcolor{green}{\ding{51}} 
 
-    \item \textbf{Implementacja i optymalizacja algorytmu przeszukiwania}
+    \item \textbf{Implementacja i optymalizacja algorytmu przeszukiwania} \textcolor{orange}{\ding{117}}
     
-    \item \textbf{Funkcja oceny pozycji} (opracowanie heurystyki oceny)
+    \item \textbf{Funkcja oceny pozycji} (opracowanie heurystyki oceny) \textcolor{green}{\ding{51}} 
         
-    \item \textbf{Weryfikacja i ocena działania} (testy poprawności, porównanie wyników z innymi silnikami)
+    \item \textbf{Weryfikacja i ocena działania} (testy poprawności, porównanie wyników z innymi silnikami)  \textcolor{orange}{\ding{117}}
     
-    \item \textbf{Wnioski i dalsze kierunki rozwoju}
+    \item \textbf{Wnioski i dalsze kierunki rozwoju}  \textcolor{orange}{\ding{117}}
     \end{enumerate}   
 
 \end{frame}
 
 %----------------
 
-\begin{frame}{Metodyka – Reprezentacja planszy}
+\begin{frame}{Metodyka – Reprezentacja planszy oraz Generacja ruchów \textcolor{green}{\ding{51}} }
     % Wspomnienie o wykorzystaniu operacji bitowych dla zwiększenia szybkości działania,
     % brak złożonej abstrakcji i polimorfizmu w czasie wykonania → low-level programming (C++).
-    Możliwe metody reprezentacji planszy:
+    Wybrana metoda reprezentacji planszy:
     \newline
     \begin{itemize}
-        \item \textbf{Piece-centric (bitboards)} – metoda wybrana; plansza traktowana jako skończony zbiór 64 pól,
+        \item \textbf{Piece-centric (bitboards)} – plansza traktowana jako skończony zbiór 64 pól,
         najczęściej reprezentowany przy użyciu 64-bitowych liczb całkowitych (każde pole odpowiada jednemu bitowi).
-        \newline 
-        \item Square-centric
-        \newline
-        \item Rozwiązania hybrydowe
     \end{itemize}
-\end{frame}
 
-\begin{frame}{Metodyka – Reprezentacja planszy}
-    \includegraphics[scale=0.5]{bitBoard.png}
-\end{frame}
-
-%----------------
-
-\begin{frame}{Metodyka – Generacja ruchów}
-    % Implementacja inkrementalna / generacyjna.
-    % Sprawdzenie poprawności ruchów: legality / pseudo-legality check.
-    Możliwe metody generacji ruchów:
+    \vspace{1.5em}
+    Wybrana metoda Generacji ruchów:
     \newline
     \begin{itemize}
-        \item \textbf{Iteracyjna (generatorowa)} – metoda wybrana; „leniwe” generowanie ruchów i ich bieżąca ocena.
-        \newline 
-        \item Generatywna
+        \item \textbf{Iteracyjna (generatorowa)} – leniwe” generowanie ruchów i ich bieżąca ocena.
     \end{itemize}
 \end{frame}
 
 %----------------
 
-\begin{frame}{Metodyka – Algorytm przeszukiwania (Search Algorithm)}
-    % Ocena z punktu widzenia gracza A = – ocena z punktu widzenia gracza B.
-    % Algorytm przeszukuje drzewo gry w głąb, stosując negację wyniku dla przeciwnika.
-    \textbf{NegaMax framework}
-    \newline
-    Rozszerzenia algorytmu:
-    \newline 
+\begin{frame}{Metodyka – Reprezentacja planszy oraz Generacja ruchów \textcolor{green}{\ding{51}} }
+    Ocena poprawności i szybkości generacji ruchów – \textbf{testy perft}
+        \vspace{1.0em}
+
+    \includegraphics[scale=0.3]{perft.png}
+
+\end{frame}
+
+\begin{frame}{Wyniki – Reprezentacja planszy oraz Generacja ruchów \textcolor{green}{\ding{51}} }
+
+    Przykład wykonania perft testów
     \begin{itemize}
-        \item \textbf{Alpha–beta pruning}
-        \newline 
-        \item \textbf{Iterative deepening}
+        \item \textbf{Głębokość}: 6
+        \item \textbf{Liczba odwiedzonych node'ów}: 120 mln.
+        \item \textbf{Czas wykonania}: ~ 15 sekund
     \end{itemize}
     \begin{center}
-        \includegraphics[scale=0.35]{tree.png}
+    \includegraphics[scale=0.39]{perft_res.png}
     \end{center}
+
 \end{frame}
 
 %----------------
 
-\begin{frame}[fragile]{Metodyka Funkcja oceny (Evaluation Function)}
-    Możliwe podejścia do oceny pozycji:
-    \newline
+\begin{frame}[fragile]{Metodyka – Algorytm przeszukiwania oraz Funkcja Oceny \textcolor{orange}{\ding{117}}}
+    % Ocena z punktu widzenia gracza A = – ocena z punktu widzenia gracza B.
+    % Algorytm przeszukuje drzewo gry w głąb, stosując negację wyniku dla przeciwnika.
+    Wybrana metoda przeszukiwania ruchów:
+    \vspace{1.0em}
     \begin{itemize}
-        \item \textbf{HCE (Hand-Crafted Evaluation)} – metoda wybrana;
-        \newline 
-        \item Wielowarstwowa sieć neuronowa – potencjalne rozszerzenie projektu, możliwe do realizacji w ramach pracy magisterskiej.
+        \item \textbf{NegaMax framework}, Alpha–beta pruning
     \end{itemize}
-
+    \vspace{1.0em}
+    Wybrana funkcja oceny: (Hand-Crafted Evaluation)
+    \vspace{1.0em}
     \begin{lstlisting}[
   basicstyle=\ttfamily\scriptsize,
   numbers=none,
@@ -241,10 +237,31 @@
 
     KQRBNP = liczba króli, hetmanów, wież, gońców, skoczków i pionków
     D, S, I = zdwojone, zablokowane i izolowane pionki
-    M = mobilność (liczba legalnych ruchów)
+    M = mobility (liczba legalnych ruchów)
     \end{lstlisting}
 \end{frame}
 
+%----------------
+
+\begin{frame}[fragile]{Wyniki - CI/CD \textcolor{green}{\ding{51}}}
+    \textbf{CI}: builds and run tests
+    \begin{center}
+    \includegraphics[scale=0.35]{ci.png}
+    \end{center}
+\end{frame}
+
+
+\section{Pozostałe}
+\begin{frame}{Pozostałe \textcolor{orange}{\ding{117}}}
+    \begin{itemize}
+        \item \textbf{Finalizacja implementacji alg. przeszukiwania}
+        \item \textbf{Ocena wyników}
+        \begin{itemize}
+            \item Analiza statycznej funkcji oceny - porównanie oceny danej pozycji z oceną innego silnika (stockfish)
+            \item Testy gry przeciw innym silnikom - oszacowanie finalnej siły silnika
+        \end{itemize}
+    \end{itemize}
+\end{frame}
 
 %%%%%%%%%%%%%%%%
 
@@ -260,7 +277,8 @@
         \item testy jednostkowe: GoogleTest framework
         \item testy funkcjonalne: stockfish (perft), python-chess framework
         \noindent\rule{\textwidth}{0.5pt}
-        \item interfejs użytkownika: UCI (Universal Chess Interface) – możliwość integracji z lokalnymi lub internetowymi GUI (np. Arena, CuteChess, Lichess)
+        \item interfejs użytkownika: UCI (Universal Chess Interface) – 
+            możliwość integracji z lokalnymi lub internetowymi GUI (np. Arena, CuteChess, Lichess) \textcolor{green}{\ding{51}}
     \end{itemize}
 \end{frame}
 

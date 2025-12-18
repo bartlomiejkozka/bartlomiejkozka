@@ -1,0 +1,162 @@
+\documentclass[10pt, a4paper]{report}
+
+% ============================================================
+% PAKIETY KODOWANIA I JĘZYKOWE
+% ============================================================
+\usepackage[utf8]{inputenc} % Kodowanie znaków
+\usepackage[T1]{fontenc}    % Kodowanie fontów (ważne dla polskich znaków)
+\usepackage[polish]{babel}  % Polskie dzielenie wyrazów i napisy (Rozdział, Spis treści)
+
+% ============================================================
+% 1. USTAWIENIA STRONY (Marginesy)
+% ============================================================
+% Lewy 3.5cm, reszta 2.5cm
+\usepackage[left=3.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm]{geometry}
+
+% ============================================================
+% 2. CZCIONKA I INTERLINIA
+% ============================================================
+\usepackage{fontspec}      % Pakiet do obsługi fontów systemowych
+\setmainfont{Verdana}      % Ustawiamy Verdanę jako główny font
+\newfontfamily\Verdana{Verdana} % Na wszelki wypadek
+
+% Interlinia 1.5 (wymagane 1.15 lub 1.5)
+\usepackage{setspace}
+\onehalfspacing 
+
+\usepackage{graphicx}
+
+% ============================================================
+% 3. AKAPITY I FORMATOWANIE TEKSTU
+% ============================================================
+% Wcięcie akapitowe 1.25 cm
+\setlength{\parindent}{1.25cm} 
+
+% Domyślnie LaTeX NIE robi wcięcia w pierwszym akapicie po tytule 
+% (co jest zgodne z Twoim wymaganiem).
+% Pakiet babel-polish może czasem wymuszać wcięcie wszędzie, 
+% ale standardowa klasa 'report' powinna to nadpisać. 
+% Gdyby jednak wcięcia pojawiły się pod tytułami, ten kod poniżej by to naprawiał:
+% \usepackage{titlesec} 
+% (ale na razie zostawiamy standard, bo jest poprawny typograficznie)
+
+% Justowanie tekstu jest włączone domyślnie w LaTeX.
+
+% ============================================================
+% 4. LICZBY I JEDNOSTKI
+% ============================================================
+\usepackage{siunitx}
+% Konfiguracja: polski przecinek jako separator dziesiętny
+\sisetup{output-decimal-marker = {,}} 
+
+% ============================================================
+% POCZĄTEK DOKUMENTU
+% ============================================================
+\begin{document}
+
+% --- Strona Tytułowa (uproszczona) ---
+\newgeometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+\begin{titlepage}
+    \centering
+
+    \includegraphics[height=5.5cm]{graphics/agh_znk_wbr_rgb_150ppi.jpg} 
+    
+    \vspace{0.5cm}
+    
+    % {\fontsize{24}{28}\selectfont \bfseries \sffamily AGH} \par
+    
+    % \vspace{0.5cm}
+
+    {\bfseries \sffamily \fontsize{14}{16}\selectfont AKADEMIA GÓRNICZO-HUTNICZA IM. STANISŁAWA STASZICA W KRAKOWIE} \par
+    \vspace{0.2cm}
+    {\bfseries \sffamily WYDZIAŁ GEOLOGII, GEOFIZYKI I OCHRONY ŚRODOWISKA} \par
+    \vspace{0.2cm}
+    {\sffamily KATEDRA GEOINFORMATYKI I INFORMATYKI STOSOWANEJ} \par
+
+    \vspace{3cm} % Duży odstęp przed tytułem
+
+    % 2. TYTUŁ PRACY
+    {\Large \sffamily Praca dyplomowa} \par
+    
+    \vspace{1.5cm}
+    
+    % Tytuł polski (kursywa)
+    {\Large \itshape \bfseries
+    Projekt silnika szachowego z wykorzystaniem metod \\
+    sztucznej inteligencji
+    } \par
+    
+    \vspace{0.5cm}
+    
+    % Tytuł angielski (kursywa)
+    {\large \itshape
+    Chess engine design using artificial intelligence methods
+    } \par
+
+    \vspace{3cm} % Odstęp przed danymi autora
+
+    % 3. DANE AUTORA I OPIEKUNA
+    % Używamy tabeli, żeby ładnie wyrównać dwukropek
+    \begin{flushleft}
+        % \hspace{4cm} % Przesunięcie tabeli w prawo (dostosuj, jeśli chcesz inaczej)
+        \begin{tabular}{ll}
+            Autor: & \textbf{Bartłomiej Kózka} \\ 
+            Kierunek studiów: & \textit{Inżynieria i Analiza Danych} \\
+            Opiekun pracy: & \textit{Prof. dr hab. inż. Norbert Skoczylas} \\
+        \end{tabular}
+    \end{flushleft}
+
+    \vfill % Wypycha datę na sam dół strony
+
+    % 4. MIEJSCE I ROK
+    Kraków, 2025
+
+\end{titlepage}
+\restoregeometry
+% LaTeX automatycznie nie numeruje strony tytułowej (liczy ją jako 1, ale nie drukuje numeru)
+
+% --- Spis treści ---
+\tableofcontents
+
+% --- Wstawienie Spisu Ilustracji ---
+\newpage % Wymusza nową stronę
+\addcontentsline{toc}{chapter}{Spis ilustracji} % Ręczne dodanie wpisu do spisu treści
+\listoffigures % Wygenerowanie listy obrazków
+
+% --- Właściwa treść pracy ---
+
+\chapter{Wstęp}
+To jest pierwszy akapit pod tytułem rozdziału. Zgodnie z Twoimi wymaganiami, **nie powinien on mieć wcięcia**. LaTeX robi to automatycznie w standardzie typografii anglosaskiej i naukowej. Tekst jest wyjustowany (wyrównany do lewej i prawej).
+
+A to jest drugi akapit. Tutaj już widzisz wcięcie wynoszące dokładnie 1,25 cm. LaTeX sam dba o podział wyrazów w języku polskim (dzięki pakietowi \texttt{babel}).
+
+\section{Przykłady liczb i jednostek}
+Tutaj pierwszy akapit pod sekcją – również bez wcięcia. Poniżej przykłady użycia pakietu \texttt{siunitx} do liczb:
+
+Akapit z wcięciem. Masa próbki wynosiła \num{12.5} (zauważ, że w kodzie wpisuję kropkę, a w PDF drukuje się przecinek – to zasługa ustawień). 
+Długość to \SI{55}{\milli\meter}. Pakiet ten automatycznie dba o "twardą spację" między liczbą a jednostką.
+
+Możesz też pisać ręcznie używając tyldy jako twardej spacji, np.: 
+Długość wynosi 10~km. (Znak tyldy \texttt{\textasciitilde} w LaTeX to właśnie twarda spacja – Ctrl+Shift+Spacja z Worda).
+
+\chapter{Cel pracy}
+Tekst w nowym rozdziale. Znowu brak wcięcia na początku. Margines lewy jest szerszy (3,5 cm) na oprawę pracy, a pozostałe mają 2,5 cm.
+
+\chapter{Zasady gry w szachy}
+
+\chapter{Projekt silnika szachowego}
+
+\chapter{Użyte technologie}
+
+\chapter{Implementacja silnika}
+
+\chapter{Analiza rezultatów i wydajności poszczególnych wersji silnika}
+
+\chapter{Wnioski}
+
+\newpage
+% \addcontentsline... (BibTeX zazwyczaj sam dodaje wpis, a jak nie, to wtedy dodasz)
+\bibliographystyle{plain}
+\bibliography{nazwa_twojego_pliku_bib}
+
+\end{document}
