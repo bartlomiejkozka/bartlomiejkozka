@@ -22,15 +22,20 @@
 
 % Interlinia 1.5 (wymagane 1.15 lub 1.5)
 \usepackage{setspace}
-\onehalfspacing 
+% \onehalfspacing 
+\setstretch{1.5}
 
 \usepackage{graphicx}
+
+% Pakiet pokazujący marginesy dokładne
+% \usepackage{showframe}
 
 % ============================================================
 % 3. AKAPITY I FORMATOWANIE TEKSTU
 % ============================================================
 % Wcięcie akapitowe 1.25 cm
-\setlength{\parindent}{1.25cm} 
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{1em}      % Dodatkowy odstęp między akapitami
 
 % Domyślnie LaTeX NIE robi wcięcia w pierwszym akapicie po tytule 
 % (co jest zgodne z Twoim wymaganiem).
@@ -41,6 +46,56 @@
 % (ale na razie zostawiamy standard, bo jest poprawny typograficznie)
 
 % Justowanie tekstu jest włączone domyślnie w LaTeX.
+
+% Wymagany pakiet do edycji nagłówków
+\usepackage{titlesec}
+
+% 1. FORMATOWANIE TYTUŁU (Usuwa słowo "Rozdział")
+% [hang] - styl wiszący (numer obok tekstu)
+% \bfseries\huge - pogrubienie i duży rozmiar
+% \thechapter. - numer rozdziału z kropką (np. "1.")
+% 0.5em - odstęp między numerem a tytułem
+\titleformat{\chapter}[hang]{\bfseries\huge}{\thechapter.}{0.5em}{}
+
+% 2. ODSTĘPY (Kontrola marginesu górnego dla tytułu)
+% Składnia: \titlespacing*{komenda}{lewy}{górny}{dolny}
+% 'górny' określa ile miejsca dodać (lub odjąć) od marginesu 2.5cm.
+% Standardowo LaTeX dodaje tu ok. 50pt.
+% Wpisanie '0pt' sprawi, że tekst zacznie się równo z marginesem strony.
+% \titlespacing*{\chapter}{0pt}{0pt}{0pt}
+\titlespacing*{\chapter}{0pt}{-\topskip}{0pt}
+
+% ============================================================
+% 4. Stopka
+% ============================================================
+
+\usepackage{fancyhdr}
+
+% Ustawiamy styl strony na "fancy" (niestandardowy)
+\pagestyle{fancy}
+
+% 1. Czyścimy domyślne ustawienia (żeby nie było śmieci w nagłówkach)
+\fancyhf{}
+
+% 2. Usuwamy linię w nagłówku (na górze strony), bo o nią nie prosiłeś
+\renewcommand{\headrulewidth}{0pt}
+
+% 3. Dodajemy linię w stopce (nad numerem strony)
+% Zmień 0.4pt na np. 1pt, jeśli linia ma być grubsza
+\renewcommand{\footrulewidth}{0.4pt}
+
+% 4. Ustawiamy numer strony (\thepage) po prawej stronie (R) w stopce (foot)
+\fancyfoot[R]{\thepage}
+
+% --- WAŻNE DLA ROZDZIAŁÓW ---
+% Strony zaczynające rozdział (te z napisem "1. Wstęp") domyślnie ignorują powyższe ustawienia.
+% Poniższy kod wymusza na nich ten sam styl (linia + numer po prawej).
+\fancypagestyle{plain}{
+    \fancyhf{} % czyść
+    \renewcommand{\headrulewidth}{0pt} % brak linii u góry
+    \renewcommand{\footrulewidth}{0.4pt} % linia na dole
+    \fancyfoot[R]{\thepage} % numer po prawej
+}
 
 % ============================================================
 % 4. LICZBY I JEDNOSTKI
@@ -126,32 +181,30 @@
 % --- Właściwa treść pracy ---
 
 \chapter{Wstęp}
-To jest pierwszy akapit pod tytułem rozdziału. Zgodnie z Twoimi wymaganiami, **nie powinien on mieć wcięcia**. LaTeX robi to automatycznie w standardzie typografii anglosaskiej i naukowej. Tekst jest wyjustowany (wyrównany do lewej i prawej).
+Sztuczna inteligencja (SI) stała się nieodłącznym elementem współczesnej technologii, wpływając na niemal każdy aspekt życia codziennego. Choć obecnie największą uwagę mediów i badaczy przyciągają generatywne modele językowe, nie należy zapominać o fundamentalnych metodach, które ukształtowały tę dziedzinę. Jednym z kluczowych obszarów, znajdującym szerokie zastosowanie w grach logicznych, jest przeszukiwanie przestrzeni stanów. Metody te stanowią podwaliny klasycznej sztucznej inteligencji, co zauważyć można już w pionierskich pracach Allena Newella i Herberta Simona. Stworzyli oni "General Problem Solver" (GPS) – program zaprojektowany do rozwiązywania dowolnego problemu, który da się zdefiniować za pomocą skończonego zbioru reguł formalnych.
 
-A to jest drugi akapit. Tutaj już widzisz wcięcie wynoszące dokładnie 1,25 cm. LaTeX sam dba o podział wyrazów w języku polskim (dzięki pakietowi \texttt{babel}).
+Szachy to deterministyczna, strategiczna gra planszowa o tzw. pełnej informowalności, pozbawiona elementów losowych. Jej geneza sięga VII wieku i indyjskiej gry Czaturanga. Po dotarciu do Europy gra ewoluowała, przyjmując współczesny system poruszania się figur pod koniec XV wieku, natomiast ostateczna standaryzacja reguł turniejowych nastąpiła w drugiej połowie XIX wieku. Obecnie szachy są jedną z najbardziej rozpowszechnionych gier logicznych na świecie, angażującą miliony graczy i stanowiącą idealne środowisko do badań nad sztuczną inteligencją.
 
-\section{Przykłady liczb i jednostek}
-Tutaj pierwszy akapit pod sekcją – również bez wcięcia. Poniżej przykłady użycia pakietu \texttt{siunitx} do liczb:
+Trafność wyboru tej gry jako domeny badawczej podkreślił rosyjski informatyk Alexander Kronrod, wypowiadając słynne zdanie: „Szachy są drozofilą sztucznej inteligencji”. Przez to porównanie do muszki owocowej – organizmu modelowego w genetyce – wskazał on na szachy jako idealne środowisko do izolowania i badania mechanizmów intelektualnych. Kronrod przestrzegał jednak, aby rozwój dziedziny nie zmienił się w „wyścigi muszek owocowych”, gdzie nacisk kładziony jest wyłącznie na wynik, a nie na zrozumienie procesów myślowych. Historia pokazała jednak, że to właśnie surowa siła obliczeniowa stała się kluczem do dominacji maszyn. Punktem zwrotnym w historii tej dyscypliny był rok 1997, kiedy to superkomputer "Deep Blue" firmy IBM pokonał urzędującego mistrza świata, Garriego Kasparowa. Był to pierwszy przypadek w historii, gdy maszyna wygrała mecz z najlepszym szachistą globu w standardowych warunkach turniejowych. Wydarzenie to uznawane jest za kamień milowy w rozwoju informatyki, symbolicznie otwierający nową erę. Od tego momentu silniki szachowe przestały być postrzegane wyłącznie jako ciekawostka technologiczna, stając się potężnymi narzędziami analitycznymi, które dziś nie tylko przewyższają człowieka zdolnościami obliczeniowymi, ale także służą do treningu i podnoszenia poziomu gry zawodników.
 
-Akapit z wcięciem. Masa próbki wynosiła \num{12.5} (zauważ, że w kodzie wpisuję kropkę, a w PDF drukuje się przecinek – to zasługa ustawień). 
-Długość to \SI{55}{\milli\meter}. Pakiet ten automatycznie dba o "twardą spację" między liczbą a jednostką.
+Kluczowym wyzwaniem w projektowaniu współczesnych silników szachowych jest optymalizacja procesu decyzyjnego. Ze względu na tzw. eksplozję kombinatoryczną, liczba możliwych wariantów partii przekracza możliwości obliczeniowe jakiegokolwiek komputera, co uniemożliwia pełne przeszukanie drzewa gry. Z tego powodu nowoczesne silniki nie analizują każdej możliwości, lecz wykorzystują zaawansowane heurystyki, pozwalające na "odcinanie" nieperspektywicznych gałęzi (pruning). Takie podejście umożliwia znalezienie optymalnego lub bliskiego optymalnemu ruchu w ściśle ograniczonym czasie, co jest warunkiem koniecznym w rozgrywkach turniejowych. Efektywność tych algorytmów decyduje o "sile" silnika szachowego znacznie bardziej niż surowa moc obliczeniowa sprzętu.
 
-Możesz też pisać ręcznie używając tyldy jako twardej spacji, np.: 
-Długość wynosi 10~km. (Znak tyldy \texttt{\textasciitilde} w LaTeX to właśnie twarda spacja – Ctrl+Shift+Spacja z Worda).
+Reasumując, zastosowanie metod sztucznej inteligencji, a w szczególności algorytmów przeszukiwania przestrzeni stanów w grach takich jak szachy, pozostaje kluczowym obszarem badań w informatyce. Gry te stanowią doskonałe środowisko do weryfikacji efektywności algorytmów, łącząc teorię z praktycznymi wyzwaniami optymalizacyjnymi. Projektowanie silnika szachowego nie jest zatem jedynie próbą stworzenia wirtualnego przeciwnika, lecz przede wszystkim ambitnym zadaniem inżynierskim, pozwalającym na praktyczne zmierzenie się z problemem wysokiej złożoności obliczeniowej.
 
 \chapter{Cel pracy}
-Tekst w nowym rozdziale. Znowu brak wcięcia na początku. Margines lewy jest szerszy (3,5 cm) na oprawę pracy, a pozostałe mają 2,5 cm.
+Celem niniejszej pracy jest zaprojektowanie i implementacja silnika szachowego wykorzystującego metody sztucznej inteligencji. Kluczowym elementem badań jest analiza wpływu wybranych algorytmów optymalizujących przeszukiwanie drzewa gry na wydajność obliczeniową programu. Ponadto, praca obejmuje porównanie różnych wariantów heurystycznych funkcji oceny pozycji oraz zbadanie, w jaki sposób zastosowane metody przekładają się na ostateczną siłę gry silnika.
+
+Układ pracy odzwierciedla przyjętą metodologię badawczą i został podzielony na część teoretyczną oraz praktyczną. Część teoretyczna zawiera szczegółowy opis algorytmu Minimax, stanowiącego fundament działania silnika szachowego. W dalszej kolejności omówiono kluczowe algorytmy optymalizacyjne, takie jak odcięcia Alpha-Beta (Alpha-Beta Pruning), pogłębianie iteracyjne (Iterative Deepening) oraz przeszukiwanie wyciszeń (Quiescence Search). Rozdział ten zamyka charakterystyka funkcji heurystycznych wykorzystywanych do statycznej oceny pozycji.
+
+Część praktyczna koncentruje się na weryfikacji eksperymentalnej zaimplementowanego rozwiązania. Siła gry silnika została zmierzona na podstawie serii turniejów rozegranych z innymi silnikami szachowymi. Przeprowadzono również analizę porównawczą, badającą wpływ poszczególnych metod optymalizacji oraz wariantów funkcji oceny na ostateczną skuteczność i ranking silnika.
 
 \chapter{Zasady gry w szachy}
 
+
 \chapter{Projekt silnika szachowego}
-
 \chapter{Użyte technologie}
-
 \chapter{Implementacja silnika}
-
 \chapter{Analiza rezultatów i wydajności poszczególnych wersji silnika}
-
 \chapter{Wnioski}
 
 \newpage
