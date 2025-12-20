@@ -63,7 +63,8 @@
 % Standardowo LaTeX dodaje tu ok. 50pt.
 % Wpisanie '0pt' sprawi, że tekst zacznie się równo z marginesem strony.
 % \titlespacing*{\chapter}{0pt}{0pt}{0pt}
-\titlespacing*{\chapter}{0pt}{-\topskip}{0pt}
+% \titlespacing*{\chapter}{0pt}{-\topskip}{0pt}
+\titlespacing*{\chapter}{0pt}{-50pt}{0pt}
 
 % ============================================================
 % 4. Stopka
@@ -96,6 +97,36 @@
     \renewcommand{\footrulewidth}{0.4pt} % linia na dole
     \fancyfoot[R]{\thepage} % numer po prawej
 }
+
+% ============================================================
+% 4. LINKI
+% ============================================================
+
+% Pozwala łamać długie linki w dowolnym miejscu (żeby nie wystawały na margines)
+\usepackage{xurl} 
+
+% Tworzy aktywne linki
+\usepackage[hidelinks]{hyperref}
+
+% ============================================================
+% 4. Podpisy figur
+% ============================================================
+
+% Pakiet do edycji wyglądu podpisów
+\usepackage{caption}
+
+% Konfiguracja globalna
+\captionsetup{
+    font={small, it},   % 'small' = mniejsza czcionka, 'it' = kursywa (italics)
+    % labelfont=bf,       % Opcjonalnie: pogrubienie etykiety (np. "Rysunek 2.1")
+    labelsep=period     % Opcjonalnie: kropka po numerze (zamiast dwukropka)
+}
+
+% ============================================================
+% 4. Zwijanie tekstu
+% ============================================================
+
+\usepackage{enumitem}
 
 % ============================================================
 % 4. LICZBY I JEDNOSTKI
@@ -178,9 +209,10 @@
 \addcontentsline{toc}{chapter}{Spis ilustracji} % Ręczne dodanie wpisu do spisu treści
 \listoffigures % Wygenerowanie listy obrazków
 
-% --- Właściwa treść pracy ---
+% ----------------------------------------------------------------------------------------------------------------
 
 \chapter{Wstęp}
+
 Sztuczna inteligencja (SI) stała się nieodłącznym elementem współczesnej technologii, wpływając na niemal każdy aspekt życia codziennego. Choć obecnie największą uwagę mediów i badaczy przyciągają generatywne modele językowe, nie należy zapominać o fundamentalnych metodach, które ukształtowały tę dziedzinę. Jednym z kluczowych obszarów, znajdującym szerokie zastosowanie w grach logicznych, jest przeszukiwanie przestrzeni stanów. Metody te stanowią podwaliny klasycznej sztucznej inteligencji, co zauważyć można już w pionierskich pracach Allena Newella i Herberta Simona. Stworzyli oni "General Problem Solver" (GPS) – program zaprojektowany do rozwiązywania dowolnego problemu, który da się zdefiniować za pomocą skończonego zbioru reguł formalnych.
 
 Szachy to deterministyczna, strategiczna gra planszowa o tzw. pełnej informowalności, pozbawiona elementów losowych. Jej geneza sięga VII wieku i indyjskiej gry Czaturanga. Po dotarciu do Europy gra ewoluowała, przyjmując współczesny system poruszania się figur pod koniec XV wieku, natomiast ostateczna standaryzacja reguł turniejowych nastąpiła w drugiej połowie XIX wieku. Obecnie szachy są jedną z najbardziej rozpowszechnionych gier logicznych na świecie, angażującą miliony graczy i stanowiącą idealne środowisko do badań nad sztuczną inteligencją.
@@ -191,6 +223,7 @@ Kluczowym wyzwaniem w projektowaniu współczesnych silników szachowych jest op
 
 Reasumując, zastosowanie metod sztucznej inteligencji, a w szczególności algorytmów przeszukiwania przestrzeni stanów w grach takich jak szachy, pozostaje kluczowym obszarem badań w informatyce. Gry te stanowią doskonałe środowisko do weryfikacji efektywności algorytmów, łącząc teorię z praktycznymi wyzwaniami optymalizacyjnymi. Projektowanie silnika szachowego nie jest zatem jedynie próbą stworzenia wirtualnego przeciwnika, lecz przede wszystkim ambitnym zadaniem inżynierskim, pozwalającym na praktyczne zmierzenie się z problemem wysokiej złożoności obliczeniowej.
 
+
 \chapter{Cel pracy}
 Celem niniejszej pracy jest zaprojektowanie i implementacja silnika szachowego wykorzystującego metody sztucznej inteligencji. Kluczowym elementem badań jest analiza wpływu wybranych algorytmów optymalizujących przeszukiwanie drzewa gry na wydajność obliczeniową programu. Ponadto, praca obejmuje porównanie różnych wariantów heurystycznych funkcji oceny pozycji oraz zbadanie, w jaki sposób zastosowane metody przekładają się na ostateczną siłę gry silnika.
 
@@ -198,10 +231,102 @@ Układ pracy odzwierciedla przyjętą metodologię badawczą i został podzielon
 
 Część praktyczna koncentruje się na weryfikacji eksperymentalnej zaimplementowanego rozwiązania. Siła gry silnika została zmierzona na podstawie serii turniejów rozegranych z innymi silnikami szachowymi. Przeprowadzono również analizę porównawczą, badającą wpływ poszczególnych metod optymalizacji oraz wariantów funkcji oceny na ostateczną skuteczność i ranking silnika.
 
-\chapter{Zasady gry w szachy}
+% ----------------------------------------------------------------------------------------------------------------
 
+\chapter{Zasady gry w szachy (według specyfikacji FIDE)}
+
+Poniższe zestawienie reguł opracowano na podstawie oficjalnych Przepisów Gry w Szachy FIDE (FIDE Laws of Chess), obowiązujących w turniejach rangi mistrzowskiej. Stanowią one zbiór wymagań funkcjonalnych zaimplementowanych w silniku.
+\url{https://www.fide.com/FIDE/handbook/LawsOfChess.pdf}
+\section{Natura i cele gry w szachy}
+\begin{description}[leftmargin=2.8cm, labelwidth=2.5cm, labelsep=0.3cm, font=\normalfont]
+    \item[{[Reguła 1.1]}] Gra w szachy toczy się między dwoma przeciwnikami, którzy na przemian wykonują posunięcia bierkami na kwadratowej planszy, zwanej szachownicą.
+    \item[{[Reguła 1.2]}] Celem każdego z graczy jest ustawienie króla przeciwnika "pod atakiem" w taki sposób, aby przeciwnik nie miał żadnego legalnego posunięcia. Gracz, który doprowadzi do takiej pozycji, "daje mata" i wygrywa partię.
+    \item[{[Reguła 1.3]}] Jeśli pozycja jest taka, że żaden z graczy nie jest w stanie "dać mata", następuje remis.
+\end{description}
+
+\section{Pozycja początkowa i szachownica}
+\begin{description}[leftmargin=2.8cm, labelwidth=2.5cm, labelsep=0.3cm, font=\normalfont]
+    \item[{[Reguła 2.1]}] Szachownica składa się z siatki 8×8, tworzącej 64 pola o jednakowych rozmiarach, naprzemiennie jasnych (pola białe) i ciemnych (pola czarne).
+    \item[{[Reguła 2.2]}] Na początku gry, jeden gracz posiada 16 białych pionków, a drugi 16 czarnych pionków.
+    \newpage
+    \item[{[Reguła 2.3]}] Początkow pozycja pionków na szachownicy wygląda następująco:
+% Nie używamy \begin{figure}, tylko zwykłego środkowania
+    \begin{center}
+        \includegraphics[height=5.5cm]{graphics/chess_board_initial_position.png}
+        % Komenda \captionof{typ}{podpis} pozwala podpisać obrazek poza środowiskiem figure
+        \captionof{figure}{Szachownica reprezentująca początkowe położenie pionków}
+    \end{center}
+    \item[{[Reguła 2.4]}] Osiem pionowych kolumn pól nazywa się liniami (oznaczone literami od a do h). Osiem poziomych rzędów pól nazywa się rzędami (numerowane od 1 do 8). Każde pole jest jednoznacznie identyfikowane przez unikalną parę współrzędnych (np. e4).
+\end{description}
+
+\section{Ruchy figur}
+\begin{description}[leftmargin=2.8cm, labelwidth=2.5cm, labelsep=0.3cm, font=\normalfont]
+    \item[{[Reguła 3.1]}] Zgodnie z Artykułem 3, żadna bierka nie może stanąć na polu zajmowanym przez bierkę tego samego koloru. Jeśli bierka staje na polu zajętym przez przeciwnika, następuje "bicie" (usunięcie bierki przeciwnika z planszy).
+    \item[{[Reguła 3.2 - Goniec]}] Goniec może poruszać się na dowolne pole wzdłuż przekątnych (diagonali), na których się znajduje.
+    \item[{[Reguła 3.3 - Wieża]}] Wieża porusza się na dowolne pole wzdłuż linii (pionowo) lub rzędu (poziomo), na którym stoi.
+    \item [{[Reguła 3.4 - Hetman]}] Hetman porusza się na dowolne pole wzdłuż linii, rzędu lub przekątnej, na której stoi. Łączy w sobie wektory ruchu Wieży i Gońca.
+    \item [{[reguła 3.5]}] Robiąc ruch Gońcem, Wieża lub Hetmanem, nie ma możliwości przeskakiwania nad innymi blokującymi figurami.
+    \item [{Reguła 3.6 - Skoczek}] Skoczek wykonuje ruch na jedno z pól najbliższych temu, na którym stoi, ale nie na tej samej linii, rzędzie czy przekątnej. Ruch ten definiuje się jako "kształt litery L" (przesunięcie o 2 pola w poziomie/pionie i 1 pole prostopadle). Jest to jedyna bierka mogąca przeskakiwać nad innymi.
+    \item [{[Reguła 3.7 - Pion]}] Pion porusza się do przodu na pole bezpośrednio przed nim na tej samej linii, pod warunkiem, że jest ono wolne.
+        \begin{enumerate}[label=\alph*), noitemsep, topsep=0pt]           
+            \item Standardowy ruch to przesunięcie o jedno pole wzdłuż linii.
+            \item Przy pierwszym ruchu danego piona możliwe jest przesunięcie o dwa pola.
+            \item Bicie odbywa się inaczej niż ruch: o jedno pole do przodu na ukos (diagonalnie).
+            \item {[Bicie w przelocie (En Passant)]} Pion atakujący pole, które minął pion przeciwnika wykonujący ruch o dwa pola, może zbić tego piona tak, jakby wykonał on ruch tylko o jedno pole. Bicie to jest możliwe wyłącznie w posunięciu następującym bezpośrednio po takim ruchu piona.
+            \item {[Promocja]} Kiedy pion osiągnie najdalszy rząd (ósmy dla białych, pierwszy dla czarnych), musi zostać natychmiast zamieniony na nową figurę (hetmana, wieżę, gońca lub skoczka) tego samego koloru.
+        \end{enumerate}
+    \item [{[Reguła 3.8 - Król]}] Król ma możliwość poruszania się na dwa różne sposoby.
+        \begin{enumerate}[label=\alph*), noitemsep, topsep=0pt]           
+            \item Król może poruszać się na dowolne sąsiednie pole, które nie jest atakowane przez jedną lub więcej bierek przeciwnika.
+            \item {[Roszada]} to ruch króla i jednej z wież tego samego koloru na tej samej linii. Jest traktowana jako jedno posunięcie króla. Wykonuje się ją przez przesunięcie króla o dwa pola w stronę wieży, a następnie postawienie wieży na polu, które król właśnie minął.
+            \item Uprawnienia do wykonania roszady są utracone kiedy:
+                \begin{itemize}
+                    \item jeśli król już się poruszył, lub
+                    \item z wieżą, która już się poruszyła
+                \end{itemize}
+            \item Roszada jest tymczasowo niemożliwa, jeżeli:
+                \begin{itemize}
+                    \item pole, na którym stoi król, pole, które król musi przekroczyć, lub pole, które król ma zająć, jest atakowane przez jedną lub więcej bierek przeciwnika;
+                    \item pomiędzy królem a wieżą, z którą ma zostać wykonana roszada, znajduje się jakakolwiek inna bierka.
+                \end{itemize}
+        \end{enumerate}
+    \item [{[Reguła 3.9]}] Uznaje się, że król jest "w szachu", jeżeli jest atakowany przez jedną lub więcej bierek przeciwnika, nawet w przypadku, gdy bierki te nie mogą wykonać ruchu na to pole, ponieważ odsłoniłyby lub wystawiły własnego króla na szach. Nie wolno wykonać posunięcia, które wystawiłoby króla tego samego koloru na szach lub pozostawiło go pod szachem.
+\end{description}
+
+\section{Zakończenie gry}
+\begin{description}[leftmargin=2.8cm, labelwidth=2.5cm, labelsep=0.3cm, font=\normalfont]
+\item[{[Reguła 5.1 - Wygrana]}] Partia zostaje wygrana przez gracza w dwóch przypadkach:
+        \begin{enumerate}[label=\alph*), noitemsep, topsep=0pt]
+            \item Gdy gracz zamatował króla przeciwnika. Kończy to partię natychmiast, pod warunkiem, że posunięcie prowadzące do pozycji matowej było wykonane zgodnie z przepisami.
+            \item Gdy przeciwnik gracza ogłosił rezygnację (poddanie się). To również natychmiast kończy partię.
+        \end{enumerate}
+
+    \item[{[Reguła 5.2 - Remis]}] Partia kończy się wynikiem nierozstrzygniętym (remisem) w następujących sytuacjach:
+        \begin{enumerate}[label=\alph*), noitemsep, topsep=0pt]
+            \item {[Pat]} Gracz, na którego przypada kolej posunięcia, nie może wykonać żadnego legalnego ruchu, a jego król nie znajduje się pod szachem.
+            \item Martwa pozycja: Powstaje pozycja, w której żaden z graczy nie może zamatować króla przeciwnika za pomocą jakiejkolwiek serii legalnych posunięć. Kończy to partię natychmiast (pod warunkiem legalności ostatniego ruchu).
+            \item {[Porozumienie stron]} Obaj gracze zgodnie ustalają remis w trakcie partii.
+            \item {[Trzykrotne powtórzenie pozycji]} Ta sama pozycja pojawiła się (lub ma się zaraz pojawić po zadeklarowanym ruchu) na szachownicy przynajmniej trzy razy.
+            \item {[Reguła 50 ruchów]} W ciągu ostatnich 50 posunięć wykonanych przez każdego z graczy nie nastąpiło żadne przesunięcie piona ani żadne bicie bierki.
+        \end{enumerate}
+\end{description}
+
+% ----------------------------------------------------------------------------------------------------------------
 
 \chapter{Projekt silnika szachowego}
+\section{Architektura systemu}
+\subsection{Model ogólny}
+% Nie używamy \begin{figure}, tylko zwykłego środkowania
+    \begin{center}
+        \includegraphics[height=12cm]{graphics/system_architecture.drawio2.png}
+        % Komenda \captionof{typ}{podpis} pozwala podpisać obrazek poza środowiskiem figure
+        \captionof{figure}{Szachownica reprezentująca początkowe położenie pionków}
+    \end{center}
+
+    
+
+% ----------------------------------------------------------------------------------------------------------------
+
 \chapter{Użyte technologie}
 \chapter{Implementacja silnika}
 \chapter{Analiza rezultatów i wydajności poszczególnych wersji silnika}
