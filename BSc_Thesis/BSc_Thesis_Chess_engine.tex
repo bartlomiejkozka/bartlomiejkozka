@@ -315,15 +315,154 @@ Poniższe zestawienie reguł opracowano na podstawie oficjalnych Przepisów Gry 
 
 \chapter{Projekt silnika szachowego}
 \section{Architektura systemu}
-\subsection{Model ogólny}
+System został zaprojektowany w oparciu o architekturę modułową, co zapewnia separację odpowiedzialności (ang. Separation of Concerns) i umożliwia niezależny rozwój oraz testowanie poszczególnych komponentów. Aplikacja funkcjonuje jako samodzielny program konsolowy, wykorzystujący standardowe strumienie wejścia/wyjścia (stdin/stdout) do komunikacji z otoczeniem. Całość realizuje model zbliżony do architektury klient-serwer, w którym silnik pełni rolę serwera obliczeniowego, natomiast klientem jest zewnętrzny graficzny interfejs użytkownika (GUI). Wymiana danych między warstwą prezentacji (GUI) a warstwą logiki (silnikiem) odbywa się za pośrednictwem ustandaryzowanego, tekstowego protokołu UCI (Universal Chess Interface).
+
 % Nie używamy \begin{figure}, tylko zwykłego środkowania
+\begin{center}
+    \includegraphics[height=12cm]{graphics/system_architecture.drawio2.png}
+    % Komenda \captionof{typ}{podpis} pozwala podpisać obrazek poza środowiskiem figure
+    \captionof{figure}{Diagram UML przedstawiający ogólną architekturę projektu}
+\end{center}
+
+\newpage
+\section{Reprezentacja planszy}
+W programowaniu silników szachowych wyróżnia się dwa główne podejścia do reprezenracji stanu gry:
+\begin{itemize}
+    \item zorientowane na bierki (ang. piece-centric)
+    \item zorientowane na pola (ang. square-centric)
+\end{itemize}
+Metoda reprezentacji zorientowana na pola (np. \textit{Mailbox}, 0x88) polega na przechowywaniu informacji o tym, jaka figura zajmuje każde z 64 pól planszy. Z kolei podejście zorientowane na bierki odwraca tę logikę, przechowując informację o lokalizacji wszystkich figur danego typu.
+
+W projekcie zastosowano reprezentację zorientowaną na bierki, zaimplementowaną przy użyciu map bitowych (ang. \textit{Bitboards}). Główną jej zaletą jest możliwość wykorzystania 64-bitowych rejestrów ogólnego przeznaczenia (GPR) współczesnych procesorów. Dzięki temu operacje na całych zbiorach figur nie wymagają iteracji pętlą po 64 polach planszy. Podstawowe operacje algebry Boole’a, takie jak koniunkcja bitowa (AND), alternatywa (OR) czy różnica symetryczna (XOR), są wykonywane przez jednostkę arytmetyczno-logiczną (ALU) procesora w ramach pojedynczej instrukcji maszynowej, co zazwyczaj przekłada się na jeden cykl zegara CPU. Przykładowo, nałożenie maski ataków na układ figur przeciwnika odbywa się w jednym kroku obliczeniowym, niezależnie od liczby bierek znajdujących się na szachownicy.
+
+W projekcie przyjęto standardowe mapowanie pól znane jako LERF (Little-Endian Rank-File Mapping). W konwencji tej najmłodszy bit (LSB – index 0) słowa maszynowego odpowiada polu a1, kolejny polu b1, aż do najstarszego bitu (MSB – index 63) przypisanego do pola h8 (Rys. 3.x).
+
+\begin{center}
+    \includegraphics[height=5cm]{graphics/bitboard.png}
+    % Komenda \captionof{typ}{podpis} pozwala podpisać obrazek poza środowiskiem figure
+    \captionof{figure}{Reprezentacja szachownicy LERF (Little-Endian Rank-File Mapping)}
+\end{center}
+
+Wybór ten nie jest przypadkowy i wynika z architektury współczesnych procesorów (x86-64), które operują w trybie Little Endian. Oznacza to, że mniej znaczące bajty zapisywane są pod niższymi adresami pamięci. Choć z punktu widzenia samej szybkości operacji bitowych (jak AND czy XOR) różnica wydajności między podejściem Little a Big Endian jest pomijalna, to zgodność logicznej reprezentacji planszy z fizyczną architekturą procesora ułatwia debugowanie, serializację danych oraz implementację niektórych operacji przesuwania bitów (bit-shifting).
+
+\section{Algorytmy przeszukania}
+\subsection{Drzewo gry}
+Drzewo gry jest fundamentalną strukturą danych wykorzystywaną w algorytmach przeszukiwania przestrzeni stanów dla gier o sumie zerowej z pełną informacją, takich jak szachy. Formalnie, przestrzeń wszystkich możliwych rozgrywek modelowana jest jako graf skierowany, który w kontekście algorytmów przeszukiwania (takich jak Minimax) przybiera postać drzewa rozpinanego od aktualnej pozycji.
+
+Struktura drzewa gry składa się z trzech kluczowych elementów: 
+\begin{itemize} 
+    \item \textbf{Korzeń (Root)} – wierzchołek początkowy reprezentujący aktualny stan gry (bieżącą konfigurację bierek na szachownicy), od którego silnik rozpoczyna analizę. 
+    \item \textbf{Krawędzie (Edges)} – reprezentują legalne posunięcia (akcje) możliwe do wykonania przez gracza, do którego należy ruch w danym węźle. Przejście krawędzią odpowiada wykonaniu ruchu i transformacji stanu gry. 
+    \item \textbf{Węzły (Nodes)} – wierzchołki potomne reprezentujące stany gry powstałe w wyniku wykonania posunięć. Węzły, które nie posiadają potomków w analizowanym fragmencie drzewa, nazywane są \textit{liśćmi} (ang. \textit{leaf nodes}) i to dla nich wywoływana jest funkcja oceny (ewaluacji). 
+\end{itemize}
+
+W szachach, ze względu na naprzemienność wykonywania ruchów, drzewo to posiada strukturę warstwową, gdzie poziomy (głębokość) odpowiadają kolejnym posunięciom stron: Białych (MAX) i Czarnych (MIN).
+
+\begin{center}
+    \includegraphics[height=13cm]{graphics/decision_tree_chess.jpg}
+    % Komenda \captionof{typ}{podpis} pozwala podpisać obrazek poza środowiskiem figure
+    \captionof{figure}{}
+\end{center}
+
+\subsection{Algorytm MiniMax}
+Algorytm Minimax jest podstawową metodą przeszukiwania drzewa gry, służącą do wyznaczenia optymalnej strategii poprzez symulację przyszłych stanów planszy. Jest to reguła decyzyjna mająca na celu minimalizację potencjalnych strat w scenariuszu pesymistycznym (ang. \textit{worst-case scenario}).
+
+Zasada działania opiera się na symulacji rozgrywki w przód o zadaną liczbę posunięć (głębokość drzewa) i założeniu, że obaj gracze grają optymalnie: \begin{itemize} \item \textbf{Gracz MAX (Maksymalizujący):} Dąży do wyboru ruchu, który prowadzi do stanu gry o jak najwyższej ocenie punktowej (zazwyczaj utożsamiany z silnikiem/stroną wykonującą ruch). \item \textbf{Gracz MIN (Minimalizujący):} Przeciwnik, który dąży do wyboru ruchu prowadzącego do stanu o jak najniższej ocenie (najgorszego dla gracza MAX). \end{itemize}
+
+Przykładowy przebieg algorytmu (Opis algorytmu przygotowano w oparciu o książkę "Wstęp do Sztucznej Inteligencji" autorstwa Mariusza Flasińskiego):
+
+Załóżmy, że każdemu liściowi drzewa przedstawionemu na Rysunku 4.4 została już przypisana wartość liczbowa obliczona przez funkcję oceny. Zgodnie z założeniami algorytmu, gracz MAX dąży do maksymalizacji tej wartości, natomiast przeciwnik (gracz MIN) dąży do jej minimalizacji, wybierając scenariusz najmniej korzystny z naszej perspektywy.
+
+Proces wyznaczania wartości węzłów wewnętrznych odbywa się w drodze propagacji wstecznej, czyli od liści w górę do korzenia. Rozważmy lewe poddrzewo: liście posiadają wartości 4, 6 oraz 5. Ponieważ węzeł rodzicielski dla tych liści znajduje się na poziomie decyzyjnym gracza MIN (przeciwnika), wybierze on wartość najniższą. W tym przypadku jest to 4, co reprezentuje najlepszy możliwy ruch dla przeciwnika (a tym samym pesymistyczny wariant dla nas).
+
+\begin{center}
+    \includegraphics[height=5cm]{graphics/minMaxTree.drawio1.png}
+    % Komenda \captionof{typ}{podpis} pozwala podpisać obrazek poza środowiskiem figure
+    \captionof{figure}{}
+\end{center}
+
+dentyczną logikę decyzyjną algorytm stosuje dla pozostałych gałęzi drzewa. W przypadku środkowego poddrzewa, spośród dostępnych ocen liści (2, 9, 8), gracz MIN wybiera wartość najniższą, czyli 2, co stanowi dla niego optymalny wybór w tej gałęzi.
+
+Podobnie w prawym poddrzewie, gdzie przeciwnik dysponuje wariantami ocenionymi na 9, 7 oraz 2. Zgodnie z założeniem o bezbłędnej grze rywala, do węzła rodzicielskiego propagowana jest wartość minimalna równa 2. W rezultacie, po zakończeniu analizy na tym poziomie głębokości, warstwa decyzyjna gracza MIN (reprezentowana przez węzły pośrednie) przyjmuje zestaw wartości {4,2,2}.
+
+\begin{center}
+    \includegraphics[height=5cm]{graphics/minMaxTree.drawio2.png}
+    % Komenda \captionof{typ}{podpis} pozwala podpisać obrazek poza środowiskiem figure
+    \captionof{figure}{}
+\end{center}
+
+Finalny etap algorytmu odbywa się w korzeniu drzewa (Rysunek 4.6). Węzeł ten należy do gracza maksymalizującego (MAX), którego celem jest wybór ruchu gwarantującego najwyższą ocenę punktową.
+
+Analizując wartości propagowane z węzłów potomnych – odpowiednio {4,2,2} – algorytm dokonuje selekcji wartości największej, równej 4. Decyzja ta jest tożsama z wyborem posunięcia prowadzącego do lewego poddrzewa, które w rozpatrywanym wariancie zapewnia najlepszy możliwy wynik przy założeniu optymalnej gry przeciwnika.
+
+\begin{center}
+    \includegraphics[height=5cm]{graphics/minMaxTree.drawio3.png}
+    % Komenda \captionof{typ}{podpis} pozwala podpisać obrazek poza środowiskiem figure
+    \captionof{figure}{}
+\end{center}
+
+\newpage
+\subsection{Algorytm Alpha-Beta – optymalizacja przeszukiwania}
+Algorytm Alpha-Beta jest rozwinięciem metody Minimax, wzbogaconym o mechanizm odcinania gałęzi (ang. \textit{pruning}), które nie mają wpływu na ostateczną decyzję. Jest to algorytm ściśle optymalizacyjny – gwarantuje znalezienie dokładnie tego samego ruchu co czysty Minimax, ale przy znacznie mniejszym nakładzie obliczeniowym.
+
+Głównym celem algorytmu jest redukcja przestrzeni przeszukiwania. W scenariuszu optymalnym (gdy najlepsze ruchy są rozważane jako pierwsze), złożoność czasowa spada z wykładniczej $O(b^d)$ do $O(b^{d/2})$, gdzie $b$ oznacza czynnik rozgałęzienia, a $d$ głębokość drzewa. W ujęciu matematycznym oznacza to zredukowanie liczby odwiedzanych stanów do pierwiastka z liczby węzłów odwiedzanych przez standardowy algorytm Minimax ($\sqrt{N}$).
+
+W celu realizacji mechanizmu odcięć wprowadza się dwie zmienne sterujące, definiujące przedział poszukiwań (tzw. okno alpha-beta):
+\begin{itemize}
+    \item \textbf{Alpha ($\alpha$)} – reprezentuje najlepszy (najwyższy) wynik, jaki gracz maksymalizujący (MAX) zdołał sobie dotychczas zagwarantować na obecnej ścieżce poszukiwań. Wartość początkowa to $-\infty$.
+    \item \textbf{Beta ($\beta$)} – reprezentuje najlepszy (najniższy) wynik, jaki gracz minimalizujący (MIN) zdołał osiągnąć dla siebie (czyli najgorszy dla nas). Wartość początkowa to $+\infty$.
+\end{itemize}
+
+Zmienne te są przekazywane i aktualizowane w trakcie przeszukiwania drzewa. Jeżeli w dowolnym momencie analizy węzła okaże się, że wartość $\alpha$ jest większa lub równa wartości $\beta$ ($\alpha \ge \beta$), następuje tzw. \textbf{odcięcie}. Oznacza to, że obecna gałąź nie musi być dalej przeszukiwana, ponieważ przeciwnik grający optymalnie nigdy nie dopuści do powstania tej pozycji (wybierze wcześniej korzystniejszy dla siebie wariant w innej gałęzi).
+
+\newpage
+Poniżej przedstawiono przykładowe działanie mechanizmu odcięć Alpha-Beta:
+\begin{itemize} 
+    \item \textbf{Etap 1 (Inicjalizacja i zejście):} Proces rozpoczyna się w korzeniu drzewa (A). Inicjowane są zmienne okna przeszukiwania: α=−∞ oraz β=+∞. Następnie algorytm wykonuje rekurencyjne zejście w głąb lewego poddrzewa (zgodnie z porządkiem DFS), przekazując aktualne wartości α i β do kolejnych węzłów. Ścieżka wywołania prowadzi przez węzły A → B → D, aż do osiągnięcia rodzica skrajnie lewych liści (węzła D).
     \begin{center}
-        \includegraphics[height=12cm]{graphics/system_architecture.drawio2.png}
-        % Komenda \captionof{typ}{podpis} pozwala podpisać obrazek poza środowiskiem figure
-        \captionof{figure}{Szachownica reprezentująca początkowe położenie pionków}
+        \includegraphics[height=10cm]{graphics/alphaBetaTree.drawio1.png}
+        \captionof{figure}{}
+    \end{center}
+    
+    \item \textbf{Etap 2 (Poziom MAX - węzeł D):} Węzeł D znajduje się na poziomie gracza maksymalizującego. Algorytm analizuje jego węzły potomne (liście) o wartościach $\{3, 6\}$.
+    Celem jest wybór wartości najwyższej (maksymalizacja).
+    \begin{itemize}
+        \item Początkowo analizowana jest wartość 3. Ponieważ $3 > \alpha$, wartość ta staje się tymczasowym najlepszym wynikiem.
+        \item Następnie analizowana jest wartość 6. Ponieważ $6 > 3$, algorytm aktualizuje wartość węzła D na 6.
+    \end{itemize}
+    W rezultacie, zmienna $\alpha$ dla tego węzła przyjmuje wartość 6 (jako nowe dolne ograniczenie dla gracza MAX).
+    \item \textbf{Etap 3:} Następnie propagujemy wybraną wartość 6 wstecz do węzła B, zgodnie z działaniem rekurencji, i tam aktualizujemy wartość $\beta$, iż jesteśmy na poziomie minimalizacji, czyli ruch wykonuje gracz minimaluzujący, a więc 6 < $\infty$, czyli $\beta$ równa się 6. Dalej przechodzimy to prawego podrzewa od węzła B, gdyż lewe już oceniliśmy.
+    \begin{center}
+        \includegraphics[height=10cm]{graphics/alphaBetaTree.drawio2.png}
+        \captionof{figure}{}
+    \end{center}
+    \item \textbf{Etap 4 (Pierwsze odcięcie):} Algorytm przechodzi do węzła E (poziom gracza maksymalizującego), który otrzymał od rodzica (węzeł B) wartość β=6. Następuje analiza lewego węzła potomnego o wartości 8. 
+    \begin{itemize} 
+        \item Ponieważ węzeł E dąży do maksymalizacji, aktualizuje swoją wartość tymczasową na 8, a tym samym przyjmuje nowe dolne ograniczenie α=8. 
+        \item Następuje weryfikacja warunku odcięcia: α≥β (czyli 8≥6). 
+    \end{itemize}
+    Warunek jest spełniony (Prawda). W tym momencie następuje tzw. odcięcie Beta (ang. \textit{Beta cut-off}). Prawa gałąź węzła E nie jest przeszukiwana. \textbf{Uzasadnienie:} Gracz minimalizujący (w węźle B) posiada już wariant gwarantujący mu wynik 6 (z węzła D). Skoro węzeł E gwarantuje wynik co najmniej 8 (lub wyższy), to dla gracza MIN jest to opcja gorsza niż ta, którą już posiada. Dlatego wartość pozostałych dzieci węzła E jest nieistotna dla decyzji podejmowanej w węźle B.
+    \begin{center}
+        \includegraphics[height=10cm]{graphics/alphaBetaTree.drawio3.png}
+        \captionof{figure}{}
     \end{center}
 
-    
+    \item \textbf{Etap 5 (Ostatnie odcięcie):} Następnie rozpoczyna się analiza prawego poddrzewa (węzeł C). Algorytm schodzi rekurencyjnie do węzła F, przekazując zaktualizowane okno przeszukiwania ($\alpha=6, \beta=+\infty$). W węźle F sprawdzane są wartości liści:
+    \begin{itemize}
+        \item Pierwsze dziecko ma wartość 4. Jest ona mniejsza od obecnego $\alpha$ (6), więc nie wpływa na wynik gracza maksymalizującego na wyższym poziomie.
+        \item Drugie dziecko ma wartość 5. Również jest ona mniejsza od $\alpha$.
+    \end{itemize}
+    Węzeł F zwraca do swojego rodzica (węzła C) swoją najlepszą wartość, czyli 5.
+
+    Węzeł C (znajdujący się na poziomie minimalizacji) aktualizuje swoją wartość $\beta$ na 5 (ponieważ $5 < \infty$). W tym momencie następuje sprawdzenie warunku odcięcia: $\alpha \ge \beta$ (czyli $6 \ge 5$). Warunek jest spełniony. Algorytm przerywa przeszukiwanie pozostałych gałęzi węzła C, uznając je za nieistotne, co kończy proces przeszukiwania dla tego fragmentu drzewa.
+    \begin{center}
+        \includegraphics[height=10cm]{graphics/alphaBetaTree.drawio4.png}
+        \captionof{figure}{}
+    \end{center}
+\end{itemize}
+
+\subsection{IPrzeszukiwanie z iteracyjnym pogłębianiem}
+
 
 % ----------------------------------------------------------------------------------------------------------------
 
