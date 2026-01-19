@@ -15,7 +15,7 @@ Chess Engine (based on the Minimax algorithm) -—> in progress (see below)
 
 ## Private projects
 
-  - [Barkoz Tempo](https://github.com/bartlomiejkozka/Barkoz-Tempo "Visit the repository") - chess engine
+  - [Barkoz Tempo](https://github.com/bartlomiejkozka/Barkoz-Tempo "Visit the repository") - Chess AI engine built from scratch. Features Alpha-Beta pruning and custom evaluation heuristics.
   - [Tiny Compiler](https://github.com/bartlomiejkozka/teeny-tiny-compiler "Visit the repository") - pseudo-code compiler
   - [Gear Shift decision maker](https://github.com/bartlomiejkozka/Gear-shift-FuzzyLogic "Visit the repository") - Gear shift decision maker based on AI Fuzzy Logic algorithm
 
