@@ -10,7 +10,7 @@ I am constantly eager to expand my knowledge in these areas:
 
 ## Engineering Thesis
 
-Chess Engine (based on the Minimax algorithm) -—> in progress (see below)
+Chess Engine -—> [Barkoz Tempo](https://github.com/bartlomiejkozka/Barkoz-Tempo "Visit the repository")
 
 
 ## Private projects
