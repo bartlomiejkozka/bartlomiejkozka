@@ -2,8 +2,6 @@
 
 ## Areas of intrest
 
-I am constantly eager to expand my knowledge in these areas:
-
 - Artificial Intelligence
 - Data Science
 - Machine Learning
