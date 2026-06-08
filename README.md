@@ -1,11 +1,5 @@
 <h1 align="center"> Hi, I'm Bartek </h1>
 
-## Areas of intrest
-
-- Artificial Intelligence
-- Data Science
-- Machine Learning
-
 ## Engineering Thesis
 
 Chess Engine -—> [Barkoz Tempo](https://github.com/bartlomiejkozka/Barkoz-Tempo "Visit the repository")
